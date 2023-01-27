@@ -16,7 +16,7 @@ func (app *App) ScriptDeploy(opt *ScriptDeployOption) error {
 	sess, _ := session.NewSession(&aws.Config{
 		Region: &(*app.Config).Region},
 	)
-	s3Client := s3.New(sess)
+	client := s3.New(sess)
 
 	// ファイルを読み込む
 	file, err := os.Open((*app.Config).ScriptDIR + "/" + (*app.Config).ScriptName)
@@ -28,7 +28,7 @@ func (app *App) ScriptDeploy(opt *ScriptDeployOption) error {
 	s3Path := (*app.Config).BucketPath + "/" + (*app.Config).ScriptName
 
 	// S3にアップロード
-	_, err = s3Client.PutObject(&s3.PutObjectInput{
+	_, err = client.PutObject(&s3.PutObjectInput{
 		Bucket: &(*app.Config).BucketName,
 		Key:    &s3Path,
 		Body:   file,
