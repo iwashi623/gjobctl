@@ -3,5 +3,5 @@ package gjobctl
 import "fmt"
 
 func ScriptDeploy() {
-	fmt.Println("ScriptDeploy")
+	fmt.Println("Start ScriptDeploy")
 }
