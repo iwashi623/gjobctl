@@ -10,15 +10,16 @@ import (
 
 func cli(sub string, opts *CLIOptions, usage func()) error {
 	app, err := New()
-	fmt.Println((*app.Config).JobName)
 	if err != nil {
 		return err
 	}
 	switch sub {
-	case "script-deploy":
-		return app.ScriptDeploy(opts.ScriptDeploy)
+	case "deploy":
+		return app.Deploy(opts.Deploy)
 	case "get":
 		return app.Get(opts.Get)
+	case "script-deploy":
+		return app.ScriptDeploy(opts.ScriptDeploy)
 	default:
 		usage()
 	}
@@ -28,12 +29,12 @@ func cli(sub string, opts *CLIOptions, usage func()) error {
 type CLIParseFunc func([]string) (string, *CLIOptions, func(), error)
 
 type CLIOptions struct {
+	Deploy       *DeployOption       `cmd:"" help:"Deploy GlueJob to Glue."`
 	Get          *GetOption          `cmd:"" help:"Get GlueJob details in Json format."`
 	ScriptDeploy *ScriptDeployOption `cmd:"" help:"Deploy GlueJob script to S3."`
 }
 
 func CLI(parseArgs CLIParseFunc) (int, error) {
-	fmt.Println("CLI Start")
 	sub, opts, usage, err := parseArgs(os.Args[1:])
 	if err != nil {
 		return 1, err
