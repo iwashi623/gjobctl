@@ -1,5 +1,5 @@
 region: ap-northeast-1
-name: samplejob
+job_name: sample-job
 script_bucket_name: aws-glue-assets-926694769671-ap-northeast-1
 script_DIR: script
 script_name: sample-job.py
