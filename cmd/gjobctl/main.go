@@ -12,7 +12,7 @@ func init() {
 }
 
 func main() {
-	exitCode, err := gjobctl.CLI()
+	exitCode, err := gjobctl.CLI(gjobctl.ParseArgs)
 	if err != nil {
 		log.Println(err)
 	}
