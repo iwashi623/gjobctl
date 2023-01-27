@@ -30,7 +30,10 @@ import (
 // 	return nil
 // }
 
-func ScriptDeploy() error {
+type ScriptDeploy struct {
+}
+
+func (*App) ScriptDeploy(opt *ScriptDeploy) error {
 	fmt.Println("Start ScriptDeploy")
 	// error := uploadToS3()
 	// if error != nil {
