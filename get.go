@@ -1,6 +1,7 @@
 package gjobctl
 
 import (
+	"encoding/json"
 	"fmt"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -12,11 +13,11 @@ type Get struct {
 	JobName *string `arg:"" name:"jobname" help:"enter the name of the Glue Job to be getted"`
 }
 
-func (*App) Get(opt *Get) error {
+func (app *App) Get(opt *Get) error {
 	// AWSのセッションを作成
-	sess := session.Must(session.NewSessionWithOptions(session.Options{
-		SharedConfigState: session.SharedConfigEnable,
-	}))
+	sess, err := session.NewSession(&aws.Config{
+		Region: &(*app.Config).Region},
+	)
 
 	// Glueのクライアントを作成
 	svc := glue.New(sess)
@@ -26,14 +27,14 @@ func (*App) Get(opt *Get) error {
 
 	// Glue Jobの情報を取得
 	result, err := svc.GetJob(&glue.GetJobInput{
-		JobName: aws.String(jobName),
+		JobName: &jobName,
 	})
 	if err != nil {
-		fmt.Println(err)
 		return err
 	}
 
 	// 取得したJob情報を表示
-	fmt.Println(result)
+	job, _ := json.MarshalIndent(result, "", "  ")
+	fmt.Println(string(job))
 	return nil
 }
