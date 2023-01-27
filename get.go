@@ -9,11 +9,11 @@ import (
 	"github.com/aws/aws-sdk-go/service/glue"
 )
 
-type Get struct {
+type GetOption struct {
 	JobName *string `arg:"" name:"jobname" help:"enter the name of the Glue Job to be getted"`
 }
 
-func (app *App) Get(opt *Get) error {
+func (app *App) Get(opt *GetOption) error {
 	// AWSのセッションを作成
 	sess, err := session.NewSession(&aws.Config{
 		Region: &(*app.Config).Region},

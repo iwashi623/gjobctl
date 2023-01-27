@@ -28,8 +28,8 @@ func cli(sub string, opts *CLIOptions, usage func()) error {
 type CLIParseFunc func([]string) (string, *CLIOptions, func(), error)
 
 type CLIOptions struct {
-	Get          *Get          `cmd:"" help:"Get GlueJob details in Json format."`
-	ScriptDeploy *ScriptDeploy `cmd:"" help:"Deploy GlueJob script to S3."`
+	Get          *GetOption          `cmd:"" help:"Get GlueJob details in Json format."`
+	ScriptDeploy *ScriptDeployOption `cmd:"" help:"Deploy GlueJob script to S3."`
 }
 
 func CLI(parseArgs CLIParseFunc) (int, error) {

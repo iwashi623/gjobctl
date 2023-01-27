@@ -2,42 +2,41 @@ package gjobctl
 
 import (
 	"fmt"
+	"os"
+
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/s3"
 )
 
-// func uploadToS3(filePath string, s3Bucket string, s3ObjectKey string) error {
-// 	sess, err := session.NewSession()
-// 	if err != nil {
-// 		return err
-// 	}
-
-// 	uploader := s3manager.NewUploader(sess)
-
-// 	file, err := os.Open(filePath)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	defer file.Close()
-
-// 	_, err = uploader.Upload(&s3manager.UploadInput{
-// 		Bucket: aws.String(s3Bucket),
-// 		Key:    aws.String(s3ObjectKey),
-// 		Body:   file,
-// 	})
-// 	if err != nil {
-// 		return err
-// 	}
-
-// 	return nil
-// }
-
-type ScriptDeploy struct {
+type ScriptDeployOption struct {
 }
 
-func (*App) ScriptDeploy(opt *ScriptDeploy) error {
-	fmt.Println("Start ScriptDeploy")
-	// error := uploadToS3()
-	// if error != nil {
-	// 	return error
-	// }
+func (app *App) ScriptDeploy(opt *ScriptDeployOption) error {
+	sess, _ := session.NewSession(&aws.Config{
+		Region: &(*app.Config).Region},
+	)
+	s3Client := s3.New(sess)
+
+	// ファイルを読み込む
+	file, err := os.Open((*app.Config).ScriptDIR + "/" + (*app.Config).ScriptName)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	s3Path := (*app.Config).BucketPath + "/" + (*app.Config).ScriptName
+
+	// S3にアップロード
+	_, err = s3Client.PutObject(&s3.PutObjectInput{
+		Bucket: &(*app.Config).BucketName,
+		Key:    &s3Path,
+		Body:   file,
+	})
+	if err != nil {
+		return err
+	}
+
+	fmt.Println("File successfully uploaded to S3")
 	return nil
 }
