@@ -1,9 +1,8 @@
 package gjobctl
 
 import (
-	"fmt"
-	"io/ioutil"
 	"log"
+	"os"
 
 	"gopkg.in/yaml.v3"
 )
@@ -22,12 +21,16 @@ func New() (*App, error) {
 }
 
 func (app *App) setup() error {
-	yamlData, _ := ioutil.ReadFile("gjobctl.yml")
+	f, err := os.Open("gjobctl.yml")
+	if err != nil {
+		return err
+	}
+	defer f.Close()
 
 	// Config構造体にデシリアライズ
 	var conf AppConfig
-	if err := yaml.Unmarshal(yamlData, &conf); err != nil {
-		fmt.Println(err)
+	decoder := yaml.NewDecoder(f)
+	if err := decoder.Decode(&conf); err != nil {
 		return err
 	}
 

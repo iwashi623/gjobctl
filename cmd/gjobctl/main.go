@@ -14,7 +14,7 @@ func init() {
 func main() {
 	exitCode, err := gjobctl.CLI(gjobctl.ParseArgs)
 	if err != nil {
-		log.Printf("ERROR: %s", err)
+		log.Fatalf("ERROR: %s", err)
 	}
 	os.Exit(exitCode)
 }

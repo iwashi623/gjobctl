@@ -18,6 +18,9 @@ func (app *App) Get(opt *GetOption) error {
 	sess, err := session.NewSession(&aws.Config{
 		Region: &(*app.Config).Region},
 	)
+	if err != nil {
+		return err
+	}
 
 	// Glueのクライアントを作成
 	svc := glue.New(sess)
