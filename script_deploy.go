@@ -14,22 +14,22 @@ type ScriptDeployOption struct {
 
 func (app *App) ScriptDeploy(opt *ScriptDeployOption) error {
 	sess, _ := session.NewSession(&aws.Config{
-		Region: &(*app.Config).Region},
+		Region: &app.config.Region},
 	)
 	client := s3.New(sess)
 
 	// ファイルを読み込む
-	file, err := os.Open((*app.Config).ScriptDIR + "/" + (*app.Config).ScriptName)
+	file, err := os.Open(app.config.ScriptDIR + "/" + app.config.ScriptName)
 	if err != nil {
 		return err
 	}
 	defer file.Close()
 
-	s3Path := (*app.Config).BucketPath + "/" + (*app.Config).ScriptName
+	s3Path := app.config.BucketPath + "/" + app.config.ScriptName
 
 	// S3にアップロード
 	_, err = client.PutObject(&s3.PutObjectInput{
-		Bucket: &(*app.Config).BucketName,
+		Bucket: &app.config.BucketName,
 		Key:    &s3Path,
 		Body:   file,
 	})

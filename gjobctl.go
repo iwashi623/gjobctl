@@ -8,7 +8,7 @@ import (
 )
 
 type App struct {
-	Config *AppConfig
+	config *AppConfig
 }
 
 func New() (*App, error) {
@@ -34,6 +34,6 @@ func (app *App) setup() error {
 		return err
 	}
 
-	app.Config = &conf
+	app.config = &conf
 	return nil
 }

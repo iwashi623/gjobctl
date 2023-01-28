@@ -16,7 +16,7 @@ type GetOption struct {
 func (app *App) Get(opt *GetOption) error {
 	// AWSのセッションを作成
 	sess, err := session.NewSession(&aws.Config{
-		Region: &(*app.Config).Region},
+		Region: &app.config.Region},
 	)
 	if err != nil {
 		return err

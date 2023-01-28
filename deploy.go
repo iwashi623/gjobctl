@@ -15,7 +15,7 @@ type DeployOption struct {
 
 func (app *App) Deploy(opt *DeployOption) error {
 	// JSONファイルからGlue Jobの設定を読み込む
-	jn := (*app.Config).JobName
+	jn := app.config.JobName
 	f, err := os.Open(jn + ".json")
 	if err != nil {
 		err = fmt.Errorf("%w:  The Json file name should be job_name.json specified in gjobctl.yml", err)
@@ -35,7 +35,7 @@ func (app *App) Deploy(opt *DeployOption) error {
 
 	// AWSセッションを作成
 	sess := session.Must(session.NewSession(&aws.Config{
-		Region: &(*app.Config).Region},
+		Region: &app.config.Region},
 	))
 
 	// Glueクライアントを作成
