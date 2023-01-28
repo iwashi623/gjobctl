@@ -2,7 +2,7 @@
 
 [AWS Glue](https://aws.amazon.com/jp/glue/)をコンソール上からポチポチ変更していると、コミット履歴が残らず辛いことが多々あったので作りました。
 
-Glue Job にのみ関心を持つツールで、Glue のスクリプトや設定ファイルを一つのリポジトリでまとめて管理したいときに欲しい機能をつけています。
+Glue Job にのみ関心を持つツールで、Glue のスクリプトや設定ファイルを一つのリポジトリでまとめて管理したいときに欲しいな思う機能を実装しました。
 
 ## Use gjobctl
 
@@ -43,29 +43,29 @@ piyo-job
 ```
 
 ### Get
+Glue Job の詳細情報を Json で取得するコマンドです。
+ここで取得した情報は、Deploy などのコマンドを実行する際に使用できます。
+
 
 ```bash
 $ gjobctl get <job-name>
 ```
 
-Glue Job の詳細情報を Json で取得するコマンドです。
-ここで取得した情報は、Deploy などのコマンドを実行する際に使用できます。
-
 ### Deploy
+Json ファイルをもとに Glue Job をアップデートするコマンドです。
 
 ```bash
 $ gjobctl deploy
 ```
 
-Json ファイルをもとに Glue Job をアップデートするコマンドです。
-
 ### ScriptDeploy
+ローカルの Job スクリプトを S3 にアップロードできます。
+ローカル、S3 上のパスはそれぞれ`gjobctl.yml`で設定してください。
 
 ```bash
 $ gjobctl script-deploy
 ```
 
-ローカルの Job スクリプトを S3 にアップロードできます。ローカル、S3 上のそれぞれのパスは`gjobctl.yml`で設定してください。
 
 ## Next..
 ### Create
