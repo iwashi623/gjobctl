@@ -31,7 +31,7 @@ func cli(sub string, opts *CLIOptions, usage func()) error {
 type CLIParseFunc func([]string) (string, *CLIOptions, func(), error)
 
 type CLIOptions struct {
-	List         *ListOption         `cmd:"" help:"List GlueJob details in Json format."`
+	List         *ListOption         `cmd:"" help:"Get GlueJob List"`
 	Get          *GetOption          `cmd:"" help:"Get GlueJob details in Json format."`
 	Deploy       *DeployOption       `cmd:"" help:"Deploy GlueJob to Glue."`
 	ScriptDeploy *ScriptDeployOption `cmd:"" help:"Deploy GlueJob script to S3."`

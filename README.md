@@ -33,6 +33,15 @@ script_name: sample-job.py
 
 json の Glue Job 定義ファイルは下記する`gjobctl get`コマンドを使うと簡単に手に入ります。
 
+### List
+Glue Job の一覧を取得するコマンドです。
+```bash
+$ gjobctl list
+sample-job
+hoge-job
+piyo-job
+```
+
 ### Get
 
 ```bash
