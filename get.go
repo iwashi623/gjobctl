@@ -23,13 +23,13 @@ func (app *App) Get(opt *GetOption) error {
 	}
 
 	// Glueのクライアントを作成
-	client := glue.New(sess)
+	sv := glue.New(sess)
 
 	// Job名を指定
 	jobName := *opt.JobName
 
 	// Glue Jobの情報を取得
-	result, err := client.GetJob(&glue.GetJobInput{
+	result, err := sv.GetJob(&glue.GetJobInput{
 		JobName: &jobName,
 	})
 	if err != nil {

@@ -39,10 +39,10 @@ func (app *App) Deploy(opt *DeployOption) error {
 	))
 
 	// Glueクライアントを作成
-	client := glue.New(sess)
+	sv := glue.New(sess)
 
 	// Glue Jobを更新
-	_, err = client.UpdateJob(&glue.UpdateJobInput{
+	_, err = sv.UpdateJob(&glue.UpdateJobInput{
 		JobName: &jn,
 		JobUpdate: &glue.JobUpdate{
 			Command:           job.Command,
