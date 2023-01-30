@@ -55,6 +55,7 @@ $ gjobctl get <job-name>
 Jsonファイルをもとに、新規GlueJobを作成するコマンドです。
 ```bash
 $ gjobctl create sample-job.json
+Successfully createsd Glue Job: sample-job
 {
   "Job": {
     "Command": {
@@ -68,11 +69,23 @@ $ gjobctl create sample-job.json
 }
 ```
 
-### Deploy
+### Update
 Json ファイルをもとに Glue Job をアップデートするコマンドです。
 
 ```bash
-$ gjobctl deploy
+$ gjobctl update sample-job.json
+Successfully updatesd Glue Job: sample-job
+{
+  "Job": {
+    "Command": {
+      "Name": "glueetl",
+      "PythonVersion": "3",
+      "ScriptLocation": "s3://your_bucket/scripts/sample-job.py"
+    },
+    "Name": "sample-job",
+    "Role": "arn:aws:iam::XXXXXXXXXXX:role/SampleGlueMasterRole",
+  }
+}
 ```
 
 ### ScriptDeploy
