@@ -18,6 +18,8 @@ func cli(sub string, opts *CLIOptions, usage func()) error {
 		return app.List(opts.List)
 	case "get":
 		return app.Get(opts.Get)
+	case "create":
+		return app.Create(opts.Create)
 	case "deploy":
 		return app.Deploy(opts.Deploy)
 	case "script-deploy":
@@ -35,6 +37,7 @@ type CLIParseFunc func([]string) (string, *CLIOptions, func(), error)
 type CLIOptions struct {
 	List         *ListOption         `cmd:"" help:"Get GlueJob List"`
 	Get          *GetOption          `cmd:"" help:"Get GlueJob details in Json format."`
+	Create       *CreateOption       `cmd:"" help:"Create GlueJob."`
 	Deploy       *DeployOption       `cmd:"" help:"Deploy GlueJob to Glue."`
 	ScriptDeploy *ScriptDeployOption `cmd:"" help:"Deploy GlueJob script to S3."`
 	Run          *RunOption          `cmd:"" help:"Run GlueJob."`
