@@ -66,13 +66,17 @@ $ gjobctl deploy
 $ gjobctl script-deploy
 ```
 
+### Run
+Glue Jobを実行するコマンドです。実行時のオプション引数はまだ対応していません。
+
+```bash
+$ gjobctl run <job-name>
+```
+
 
 ## Next..
 ### Create
 新規Jobを作れるようにします。
-
-### Run
-Jobを実行できるようにします。
 
 ### Log
 Jobの実行ログを取れるようにします。
