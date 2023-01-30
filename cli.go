@@ -22,6 +22,8 @@ func cli(sub string, opts *CLIOptions, usage func()) error {
 		return app.Deploy(opts.Deploy)
 	case "script-deploy":
 		return app.ScriptDeploy(opts.ScriptDeploy)
+	case "run":
+		return app.Run(opts.Run)
 	default:
 		usage()
 	}
@@ -35,6 +37,7 @@ type CLIOptions struct {
 	Get          *GetOption          `cmd:"" help:"Get GlueJob details in Json format."`
 	Deploy       *DeployOption       `cmd:"" help:"Deploy GlueJob to Glue."`
 	ScriptDeploy *ScriptDeployOption `cmd:"" help:"Deploy GlueJob script to S3."`
+	Run          *RunOption          `cmd:"" help:"Run GlueJob."`
 }
 
 func CLI(parseArgs CLIParseFunc) (int, error) {
