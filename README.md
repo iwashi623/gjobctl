@@ -51,6 +51,23 @@ Glue Job の詳細情報を Json で取得するコマンドです。
 $ gjobctl get <job-name>
 ```
 
+### Create
+Jsonファイルをもとに、新規GlueJobを作成するコマンドです。
+```bash
+$ gjobctl create sample-job.json
+{
+  "Job": {
+    "Command": {
+      "Name": "glueetl",
+      "PythonVersion": "3",
+      "ScriptLocation": "s3://your_bucket/scripts/sample-job.py"
+    },
+    "Name": "sample-job",
+    "Role": "arn:aws:iam::XXXXXXXXXXX:role/SampleGlueMasterRole",
+  }
+}
+```
+
 ### Deploy
 Json ファイルをもとに Glue Job をアップデートするコマンドです。
 
@@ -59,7 +76,7 @@ $ gjobctl deploy
 ```
 
 ### ScriptDeploy
-ローカルの Job スクリプトを S3 にアップロードできます。
+ローカルの Job スクリプトを S3 にアップロードするコマンドです。
 ローカル、S3 上のパスはそれぞれ`gjobctl.yml`で設定してください。
 
 ```bash
@@ -75,8 +92,3 @@ $ gjobctl run <job-name>
 
 
 ## Next..
-### Create
-新規Jobを作れるようにします。
-
-### Log
-Jobの実行ログを取れるようにします。
