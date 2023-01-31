@@ -22,7 +22,9 @@ func (app *App) List(opt *ListOption) error {
 	sv := glue.New(sess)
 
 	// Glue Jobの一覧を取得
-	result, err := sv.GetJobs(&glue.GetJobsInput{})
+	result, err := sv.GetJobs(&glue.GetJobsInput{
+		MaxResults: aws.Int64(1000),
+	})
 	if err != nil {
 		return err
 	}
