@@ -46,7 +46,7 @@ $ gjobctl get <job-name>
 ### Create
 Jsonファイルをもとに、新規GlueJobを作成するコマンドです。
 ```bash
-$ gjobctl create sample-job.json
+$ gjobctl create
 Successfully createsd Glue Job: sample-job
 {
   "Job": {
@@ -59,6 +59,12 @@ Successfully createsd Glue Job: sample-job
     "Role": "arn:aws:iam::XXXXXXXXXXX:role/SampleGlueMasterRole",
   }
 }
+```
+
+option
+```
+json形式のJobの設定ファイルは"-f"オプションで任意の値を渡せます。
+-f, --job-setting-file=JOB-SETTING-FILE
 ```
 
 ### Update
@@ -78,6 +84,12 @@ Successfully updatesd Glue Job: sample-job
     "Role": "arn:aws:iam::XXXXXXXXXXX:role/SampleGlueMasterRole",
   }
 }
+```
+
+option
+```
+json形式のJobの設定ファイルは"-f"オプションで任意の値を渡せます。
+-f, --job-setting-file=JOB-SETTING-FILE
 ```
 
 ### ScriptDeploy
