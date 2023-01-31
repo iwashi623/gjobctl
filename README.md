@@ -114,3 +114,4 @@ $ gjobctl run <job-name>
 
 
 ## Next..
+ - [ ] テストの実装
