@@ -21,14 +21,6 @@ sample-job
 ```yml:gjobctl.yml
 region: ap-northeast-1
 job_name: sample-job
-# スクリプトデプロイ先Bucket名
-bucket_name: your_bucket_name
-# スクリプトデプロイ先BucketPath
-bucket_path: your_bucket_path
-# ローカル環境のスクリプト配置ディレクトリ
-script_dir: script
-# デプロイするJobスクリプト名
-script_name: sample-job.py
 ```
 
 json の Glue Job 定義ファイルは下記する`gjobctl get`コマンドを使うと簡単に手に入ります。
@@ -90,10 +82,15 @@ Successfully updatesd Glue Job: sample-job
 
 ### ScriptDeploy
 ローカルの Job スクリプトを S3 にアップロードするコマンドです。
-ローカル、S3 上のパスはそれぞれ`gjobctl.yml`で設定してください。
 
 ```bash
-$ gjobctl script-deploy
+$ gjobctl script-deploy <script-local-path> 
+```
+
+option
+```
+json形式のJobの設定ファイルは"-f"オプションで任意の値を渡せます。
+-f, --job-setting-file=JOB-SETTING-FILE
 ```
 
 ### Run
