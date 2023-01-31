@@ -115,3 +115,5 @@ $ gjobctl run <job-name>
 
 ## Next..
  - [ ] テストの実装
+ - [ ] Timeoutの設定
+
