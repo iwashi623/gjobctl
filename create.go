@@ -12,7 +12,7 @@ import (
 )
 
 type CreateOption struct {
-	JobSettingFile *string `name:"job-setting-file" description:"job setting file in json"`
+	JobSettingFile *string `name:"job-setting-file" short:"f" description:"job setting file in json"`
 }
 
 func (app *App) Create(opt *CreateOption) error {
