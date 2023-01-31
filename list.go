@@ -17,7 +17,7 @@ func (app *App) List(opt *ListOption) error {
 		Region: &app.config.Region},
 	)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to create session: %w", err)
 	}
 	sv := glue.New(sess)
 
@@ -26,7 +26,7 @@ func (app *App) List(opt *ListOption) error {
 		MaxResults: aws.Int64(1000),
 	})
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to get job list: %w", err)
 	}
 
 	// JobNameを改行しながら出力

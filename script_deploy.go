@@ -19,15 +19,13 @@ type ScriptDeployOption struct {
 
 func (app *App) ScriptDeploy(opt *ScriptDeployOption) error {
 	// JSONファイルからGlue Jobの設定を読み込む
-	fmt.Println(*opt.ScriptLocalPath)
 	var settingFileName string
 	if opt.JobSettingFile == nil {
 		settingFileName = app.config.JobName + ".json"
 	} else {
 		settingFileName = *opt.JobSettingFile
 	}
-	fmt.Println(settingFileName)
-	f, err := openSttingFile(settingFileName)
+	f, err := os.Open(settingFileName)
 	if err != nil {
 		return fmt.Errorf("failed to open setting file: %w", err)
 	}
@@ -37,7 +35,7 @@ func (app *App) ScriptDeploy(opt *ScriptDeployOption) error {
 	var job glue.Job
 	err = json.NewDecoder(f).Decode(&job)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to decode json: %w", err)
 	}
 
 	sess, _ := session.NewSession(&aws.Config{
@@ -59,8 +57,6 @@ func (app *App) ScriptDeploy(opt *ScriptDeployOption) error {
 	bucketName := match[1]
 	bucketKey := match[2]
 
-	fmt.Println(bucketName)
-	fmt.Println(bucketKey)
 	// S3にアップロード
 	_, err = sv.PutObject(&s3.PutObjectInput{
 		Bucket: &bucketName,
@@ -73,12 +69,4 @@ func (app *App) ScriptDeploy(opt *ScriptDeployOption) error {
 
 	fmt.Println("File successfully uploaded to S3")
 	return nil
-}
-
-func openSttingFile(fileName string) (*os.File, error) {
-	f, err := os.Open(fileName)
-	if err != nil {
-		return nil, err
-	}
-	return f, nil
 }

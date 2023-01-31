@@ -19,7 +19,7 @@ func (app *App) Get(opt *GetOption) error {
 		Region: &app.config.Region},
 	)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to create session: %w", err)
 	}
 
 	// Glueのクライアントを作成
@@ -33,7 +33,7 @@ func (app *App) Get(opt *GetOption) error {
 		JobName: &jobName,
 	})
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to get job: %w", err)
 	}
 
 	// 取得したJob情報を表示

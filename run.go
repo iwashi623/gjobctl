@@ -1,6 +1,7 @@
 package gjobctl
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -18,7 +19,7 @@ func (app *App) Run(opt *RunOption) error {
 		Region: &app.config.Region},
 	)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to create session: %w", err)
 	}
 
 	// Glueのクライアントを作成
@@ -30,7 +31,7 @@ func (app *App) Run(opt *RunOption) error {
 
 	result, err := sv.StartJobRun(input)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to start job: %w", err)
 	}
 
 	log.Printf("Successfully Started Glue Job. job-name: %s job-run-id:%s", *opt.JobName, *result.JobRunId)

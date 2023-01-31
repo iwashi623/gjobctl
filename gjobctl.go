@@ -1,6 +1,7 @@
 package gjobctl
 
 import (
+	"fmt"
 	"log"
 	"os"
 
@@ -23,7 +24,7 @@ func New() (*App, error) {
 func (app *App) setup() error {
 	f, err := os.Open("gjobctl.yml")
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to open config file: %w", err)
 	}
 	defer f.Close()
 
@@ -31,9 +32,14 @@ func (app *App) setup() error {
 	var conf AppConfig
 	decoder := yaml.NewDecoder(f)
 	if err := decoder.Decode(&conf); err != nil {
-		return err
+		return fmt.Errorf("failed to decode config file: %w", err)
 	}
 
 	app.config = &conf
 	return nil
+}
+
+type AppConfig struct {
+	Region  string `yaml:"region"`
+	JobName string `yaml:"job_name"`
 }

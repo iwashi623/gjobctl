@@ -12,14 +12,20 @@ import (
 )
 
 type CreateOption struct {
-	JobSettingFile *string `arg:"" name:"job-setting-file" description:"job setting file in json" required:"true"`
+	JobSettingFile *string `name:"job-setting-file" description:"job setting file in json" required:"true"`
 }
 
 func (app *App) Create(opt *CreateOption) error {
 	// JSONファイルからGlue Jobの設定を読み込む
-	f, err := os.Open(*opt.JobSettingFile)
+	var settingFileName string
+	if opt.JobSettingFile == nil {
+		settingFileName = app.config.JobName + ".json"
+	} else {
+		settingFileName = *opt.JobSettingFile
+	}
+	f, err := os.Open(settingFileName)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to open setting file: %w", err)
 	}
 	defer f.Close()
 
@@ -27,7 +33,7 @@ func (app *App) Create(opt *CreateOption) error {
 	var job glue.Job
 	json.NewDecoder(f).Decode(&job)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to decode json: %w", err)
 	}
 
 	// AWSセッションを作成
