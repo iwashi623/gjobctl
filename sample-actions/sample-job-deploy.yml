@@ -1,0 +1,59 @@
+name: Glue Job Deploy
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "**/*.json"  
+
+env:
+  AWS_REGION: ap-northeast-1
+  AWS_ROLE_ARN: arn:aws:iam::<Your AWS AccountID>:role/Example-Role
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    # These permissions are needed to interact with GitHub's OIDC Token endpoint.
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@master
+        with:
+          role-to-assume: ${{ env.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - uses: actions/setup-go@v3
+        with:
+          go-version: 1.19
+      
+      # Actionsの中で差分を検知したいので、ローカルにすべての履歴をとってくる
+      - name: Unshallow git
+        run: git fetch --prune --unshallow
+
+      - name: get Target files
+        run: |
+          changed_files=`git diff HEAD..HEAD^ --name-only | grep -E '^([^\/]+)\/(.*\.json)' | grep -v -e '^\s*$' | sed -e 's/^\.\///g'`
+          echo $changed_files
+          echo "changed_files=${changed_files}" >> $GITHUB_ENV
+
+      - name: Deploy glue Job
+        env:
+          FILES: ${{ env.changed_files }}
+        run: |
+          export GOPATH=$HOME/go
+          export GOBIN=$GOPATH/bin
+          export PATH=$PATH:$GOBIN
+          go install github.com/iwashi623/gjobctl/cmd/gjobctl@latest
+
+          changed_files=${{ env.changed_files }}
+
+          for f in $changed_files; do
+            dir=$(dirname "$f")
+            cd $dir
+            gjobctl update || gjobctl deploy
+          done
