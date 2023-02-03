@@ -7,7 +7,7 @@ Glue Job にのみ関心を持つツールで、Glue のスクリプトや設定
 ## Use gjobctl
 
 ### 準備
-
+GlueJobのリポジトリ例
 ```bash
 sample-job
 ├── gjobctl.yml  ## <- gjobctl設定ファイル
@@ -21,6 +21,7 @@ sample-job
 ```yml:gjobctl.yml
 region: ap-northeast-1
 job_name: sample-job
+job_setting_file: sample-job.json
 ```
 
 json の Glue Job 定義ファイルは下記する`gjobctl get`コマンドを使うと簡単に手に入ります。
