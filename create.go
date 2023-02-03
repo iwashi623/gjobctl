@@ -11,15 +11,16 @@ import (
 	"github.com/aws/aws-sdk-go/service/glue"
 )
 
-type BaseOption interface {
-}
+const (
+	TimeoutForCreate = 5 * time.Second
+)
 
 type CreateOption struct {
 	JobSettingFile *string `name:"job-setting-file" short:"f" description:"job setting file in json"`
 }
 
 func (app *App) Create(ctx context.Context, opt *CreateOption) error {
-	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	ctx, cancel := context.WithTimeout(ctx, TimeoutForCreate)
 	defer cancel()
 
 	var fn string

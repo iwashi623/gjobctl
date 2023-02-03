@@ -9,6 +9,11 @@ import (
 	"github.com/alecthomas/kong"
 )
 
+const (
+	ExitCodeOK    = 0
+	ExitCodeError = 1
+)
+
 func cli(ctx context.Context, sub string, opts *CLIOptions, usage func()) error {
 	app, err := New()
 	if err != nil {
@@ -47,14 +52,14 @@ type CLIOptions struct {
 func CLI(ctx context.Context, parseArgs CLIParseFunc) (int, error) {
 	sub, opts, usage, err := parseArgs(os.Args[1:])
 	if err != nil {
-		return 1, err
+		return ExitCodeError, err
 	}
 
 	err = cli(ctx, sub, opts, usage)
 	if err != nil {
-		return 1, err
+		return ExitCodeError, err
 	}
-	return 0, nil
+	return ExitCodeOK, nil
 }
 
 func ParseArgs(args []string) (string, *CLIOptions, func(), error) {

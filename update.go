@@ -11,12 +11,16 @@ import (
 	"github.com/aws/aws-sdk-go/service/glue"
 )
 
+const (
+	TimeoutForUpdate = 5 * time.Second
+)
+
 type UpdateOption struct {
 	JobSettingFile *string `name:"job-setting-file" short:"f" description:"job setting file in json"`
 }
 
 func (app *App) Update(ctx context.Context, opt *UpdateOption) error {
-	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	ctx, cancel := context.WithTimeout(ctx, TimeoutForUpdate)
 	defer cancel()
 
 	// JSONファイルからGlue Jobの設定を読み込む

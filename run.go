@@ -9,12 +9,16 @@ import (
 	"github.com/aws/aws-sdk-go/service/glue"
 )
 
+const (
+	TimeoutForRun = 5 * time.Second
+)
+
 type RunOption struct {
 	JobName *string `arg:"" name:"jobname" help:"enter the name of the Glue Job to run"`
 }
 
 func (app *App) Run(ctx context.Context, opt *RunOption) error {
-	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	ctx, cancel := context.WithTimeout(ctx, TimeoutForRun)
 	defer cancel()
 
 	// AWSのセッションを作成
