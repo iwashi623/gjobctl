@@ -1,13 +1,13 @@
 package gjobctl
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"log"
 	"os"
+	"time"
 
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/glue"
 )
 
@@ -15,17 +15,18 @@ type UpdateOption struct {
 	JobSettingFile *string `name:"job-setting-file" short:"f" description:"job setting file in json"`
 }
 
-func (app *App) Update(opt *UpdateOption) error {
+func (app *App) Update(ctx context.Context, opt *UpdateOption) error {
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
 	// JSONファイルからGlue Jobの設定を読み込む
-	var settingFileName string
+	var fn string
 	if opt.JobSettingFile != nil {
-		settingFileName = *opt.JobSettingFile
-	} else if app.config.JobSettingFile != "" {
-		settingFileName = app.config.JobSettingFile
+		fn = *opt.JobSettingFile
 	} else {
-		settingFileName = app.config.JobName + ".json"
+		fn = app.getJobSettingFileName()
 	}
-	f, err := os.Open(settingFileName)
+	f, err := os.Open(fn)
 	if err != nil {
 		return fmt.Errorf("failed to open setting file: %w", err)
 	}
@@ -39,15 +40,16 @@ func (app *App) Update(opt *UpdateOption) error {
 	}
 
 	// AWSセッションを作成
-	sess := session.Must(session.NewSession(&aws.Config{
-		Region: &app.config.Region},
-	))
+	sess, err := app.createAWSSession()
+	if err != nil {
+		return err
+	}
 
 	// Glueクライアントを作成
 	sv := glue.New(sess)
 
 	// Glue Jobを更新
-	r, err := sv.UpdateJob(&glue.UpdateJobInput{
+	r, err := sv.UpdateJobWithContext(ctx, &glue.UpdateJobInput{
 		JobName: job.Name,
 		JobUpdate: &glue.JobUpdate{
 			CodeGenConfigurationNodes: job.CodeGenConfigurationNodes,

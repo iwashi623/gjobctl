@@ -22,7 +22,7 @@ func cli(ctx context.Context, sub string, opts *CLIOptions, usage func()) error 
 	case "create":
 		return app.Create(ctx, opts.Create)
 	case "update":
-		return app.Update(opts.Update)
+		return app.Update(ctx, opts.Update)
 	case "script-deploy":
 		return app.ScriptDeploy(ctx, opts.ScriptDeploy)
 	case "run":
