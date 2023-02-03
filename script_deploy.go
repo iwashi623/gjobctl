@@ -20,10 +20,12 @@ type ScriptDeployOption struct {
 func (app *App) ScriptDeploy(opt *ScriptDeployOption) error {
 	// JSONファイルからGlue Jobの設定を読み込む
 	var settingFileName string
-	if opt.JobSettingFile == nil {
-		settingFileName = app.config.JobName + ".json"
-	} else {
+	if opt.JobSettingFile != nil {
 		settingFileName = *opt.JobSettingFile
+	} else if app.config.JobSettingFile != "" {
+		settingFileName = app.config.JobSettingFile
+	} else {
+		settingFileName = app.config.JobName + ".json"
 	}
 	f, err := os.Open(settingFileName)
 	if err != nil {

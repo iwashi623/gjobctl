@@ -40,6 +40,7 @@ func (app *App) setup() error {
 }
 
 type AppConfig struct {
-	Region  string `yaml:"region"`
-	JobName string `yaml:"job_name"`
+	Region         string `yaml:"region"`
+	JobName        string `yaml:"job_name"`
+	JobSettingFile string `yaml:"job_setting_file"`
 }
