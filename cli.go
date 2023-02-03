@@ -1,6 +1,7 @@
 package gjobctl
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"strings"
@@ -8,14 +9,14 @@ import (
 	"github.com/alecthomas/kong"
 )
 
-func cli(sub string, opts *CLIOptions, usage func()) error {
+func cli(ctx context.Context, sub string, opts *CLIOptions, usage func()) error {
 	app, err := New()
 	if err != nil {
 		return err
 	}
 	switch sub {
 	case "list":
-		return app.List(opts.List)
+		return app.List(ctx, opts.List)
 	case "get":
 		return app.Get(opts.Get)
 	case "create":
@@ -43,13 +44,13 @@ type CLIOptions struct {
 	Run          *RunOption          `cmd:"" help:"Run GlueJob."`
 }
 
-func CLI(parseArgs CLIParseFunc) (int, error) {
+func CLI(ctx context.Context, parseArgs CLIParseFunc) (int, error) {
 	sub, opts, usage, err := parseArgs(os.Args[1:])
 	if err != nil {
 		return 1, err
 	}
 
-	err = cli(sub, opts, usage)
+	err = cli(ctx, sub, opts, usage)
 	if err != nil {
 		return 1, err
 	}
