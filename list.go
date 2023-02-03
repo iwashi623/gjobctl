@@ -1,28 +1,30 @@
 package gjobctl
 
 import (
+	"context"
 	"fmt"
+	"time"
 
 	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/glue"
 )
 
 type ListOption struct {
 }
 
-func (app *App) List(opt *ListOption) error {
+func (app *App) List(ctx context.Context, opt *ListOption) error {
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
 	// AWSのセッションを作成
-	sess, err := session.NewSession(&aws.Config{
-		Region: &app.config.Region},
-	)
+	sess, err := app.createAWSSession()
 	if err != nil {
-		return fmt.Errorf("failed to create session: %w", err)
+		return err
 	}
 	sv := glue.New(sess)
 
 	// Glue Jobの一覧を取得
-	result, err := sv.GetJobs(&glue.GetJobsInput{
+	result, err := sv.GetJobsWithContext(ctx, &glue.GetJobsInput{
 		MaxResults: aws.Int64(1000),
 	})
 	if err != nil {

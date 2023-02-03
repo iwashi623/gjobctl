@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"log"
 	"os"
 
@@ -12,7 +13,8 @@ func init() {
 }
 
 func main() {
-	exitCode, err := gjobctl.CLI(gjobctl.ParseArgs)
+	ctx := context.Background()
+	exitCode, err := gjobctl.CLI(ctx, gjobctl.ParseArgs)
 	if err != nil {
 		log.Fatalf("ERROR: %s", err)
 	}

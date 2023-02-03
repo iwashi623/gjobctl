@@ -1,11 +1,11 @@
 package gjobctl
 
 import (
+	"context"
 	"fmt"
 	"log"
+	"time"
 
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/glue"
 )
 
@@ -13,13 +13,14 @@ type RunOption struct {
 	JobName *string `arg:"" name:"jobname" help:"enter the name of the Glue Job to run"`
 }
 
-func (app *App) Run(opt *RunOption) error {
+func (app *App) Run(ctx context.Context, opt *RunOption) error {
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
 	// AWSのセッションを作成
-	sess, err := session.NewSession(&aws.Config{
-		Region: &app.config.Region},
-	)
+	sess, err := app.createAWSSession()
 	if err != nil {
-		return fmt.Errorf("failed to create session: %w", err)
+		return err
 	}
 
 	// Glueのクライアントを作成
@@ -29,7 +30,7 @@ func (app *App) Run(opt *RunOption) error {
 		JobName: opt.JobName,
 	}
 
-	result, err := sv.StartJobRun(input)
+	result, err := sv.StartJobRunWithContext(ctx, input)
 	if err != nil {
 		return fmt.Errorf("failed to start job: %w", err)
 	}

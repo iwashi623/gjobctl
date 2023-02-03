@@ -1,31 +1,35 @@
 package gjobctl
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"log"
 	"os"
+	"time"
 
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/glue"
 )
+
+type BaseOption interface {
+}
 
 type CreateOption struct {
 	JobSettingFile *string `name:"job-setting-file" short:"f" description:"job setting file in json"`
 }
 
-func (app *App) Create(opt *CreateOption) error {
-	// JSONファイルからGlue Jobの設定を読み込む
-	var settingFileName string
+func (app *App) Create(ctx context.Context, opt *CreateOption) error {
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	var fn string
 	if opt.JobSettingFile != nil {
-		settingFileName = *opt.JobSettingFile
-	} else if app.config.JobSettingFile != "" {
-		settingFileName = app.config.JobSettingFile
+		fn = *opt.JobSettingFile
 	} else {
-		settingFileName = app.config.JobName + ".json"
+		fn = app.getJobSettingFileName()
 	}
-	f, err := os.Open(settingFileName)
+
+	f, err := os.Open(fn)
 	if err != nil {
 		return fmt.Errorf("failed to open setting file: %w", err)
 	}
@@ -38,16 +42,16 @@ func (app *App) Create(opt *CreateOption) error {
 		return fmt.Errorf("failed to decode json: %w", err)
 	}
 
-	// AWSセッションを作成
-	sess := session.Must(session.NewSession(&aws.Config{
-		Region: &app.config.Region},
-	))
+	sess, err := app.createAWSSession()
+	if err != nil {
+		return err
+	}
 
 	// Glueクライアントを作成
 	sv := glue.New(sess)
 
 	// Glue Jobを更新
-	r, err := sv.CreateJob(&glue.CreateJobInput{
+	r, err := sv.CreateJobWithContext(ctx, &glue.CreateJobInput{
 		CodeGenConfigurationNodes: job.CodeGenConfigurationNodes,
 		Command:                   job.Command,
 		Connections:               job.Connections,

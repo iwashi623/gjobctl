@@ -1,13 +1,14 @@
 package gjobctl
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
+	"log"
 	"os"
 	"regexp"
+	"time"
 
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/glue"
 	"github.com/aws/aws-sdk-go/service/s3"
 )
@@ -17,17 +18,18 @@ type ScriptDeployOption struct {
 	ScriptLocalPath *string `arg:"" name:"script-local-path" short:"s" description:"script local path"`
 }
 
-func (app *App) ScriptDeploy(opt *ScriptDeployOption) error {
+func (app *App) ScriptDeploy(ctx context.Context, opt *ScriptDeployOption) error {
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
 	// JSONファイルからGlue Jobの設定を読み込む
-	var settingFileName string
+	var fn string
 	if opt.JobSettingFile != nil {
-		settingFileName = *opt.JobSettingFile
-	} else if app.config.JobSettingFile != "" {
-		settingFileName = app.config.JobSettingFile
+		fn = *opt.JobSettingFile
 	} else {
-		settingFileName = app.config.JobName + ".json"
+		fn = app.getJobSettingFileName()
 	}
-	f, err := os.Open(settingFileName)
+	f, err := os.Open(fn)
 	if err != nil {
 		return fmt.Errorf("failed to open setting file: %w", err)
 	}
@@ -40,9 +42,11 @@ func (app *App) ScriptDeploy(opt *ScriptDeployOption) error {
 		return fmt.Errorf("failed to decode json: %w", err)
 	}
 
-	sess, _ := session.NewSession(&aws.Config{
-		Region: &app.config.Region},
-	)
+	sess, err := app.createAWSSession()
+	if err != nil {
+		return err
+	}
+
 	sv := s3.New(sess)
 
 	// ファイルを読み込む
@@ -53,14 +57,13 @@ func (app *App) ScriptDeploy(opt *ScriptDeployOption) error {
 	defer sf.Close()
 
 	// jobの設定ファイルからS3のパスを取得
-	s3Path := *job.Command.ScriptLocation
-	re := regexp.MustCompile(`s3://([^/]+)/(.*)`)
-	match := re.FindStringSubmatch(s3Path)
-	bucketName := match[1]
-	bucketKey := match[2]
+	bucketName, bucketKey, err := getBucketNameAndKey(*job.Command.ScriptLocation)
+	if err != nil {
+		return err
+	}
 
 	// S3にアップロード
-	_, err = sv.PutObject(&s3.PutObjectInput{
+	_, err = sv.PutObjectWithContext(ctx, &s3.PutObjectInput{
 		Bucket: &bucketName,
 		Key:    &bucketKey,
 		Body:   sf,
@@ -69,6 +72,15 @@ func (app *App) ScriptDeploy(opt *ScriptDeployOption) error {
 		return fmt.Errorf("failed to upload file to S3: %w", err)
 	}
 
-	fmt.Println("File successfully uploaded to S3")
+	log.Println("File successfully uploaded to S3")
 	return nil
+}
+
+func getBucketNameAndKey(s3Path string) (string, string, error) {
+	re := regexp.MustCompile(`s3://([^/]+)/(.*)`)
+	match := re.FindStringSubmatch(s3Path)
+	if match[1] == "" || match[2] == "" {
+		return "", "", fmt.Errorf("failed to parse s3 path: %s", s3Path)
+	}
+	return match[1], match[2], nil
 }

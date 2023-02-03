@@ -5,6 +5,8 @@ import (
 	"log"
 	"os"
 
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/session"
 	"gopkg.in/yaml.v3"
 )
 
@@ -37,6 +39,24 @@ func (app *App) setup() error {
 
 	app.config = &conf
 	return nil
+}
+
+func (app *App) getJobSettingFileName() string {
+	if app.config.JobSettingFile != "" {
+		return app.config.JobSettingFile
+	} else {
+		return app.config.JobName + ".json"
+	}
+}
+
+func (app *App) createAWSSession() (*session.Session, error) {
+	sess, err := session.NewSession(&aws.Config{
+		Region: &app.config.Region},
+	)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create session: %w", err)
+	}
+	return sess, nil
 }
 
 type AppConfig struct {
