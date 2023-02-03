@@ -18,7 +18,7 @@ func cli(ctx context.Context, sub string, opts *CLIOptions, usage func()) error 
 	case "list":
 		return app.List(ctx, opts.List)
 	case "get":
-		return app.Get(opts.Get)
+		return app.Get(ctx, opts.Get)
 	case "create":
 		return app.Create(opts.Create)
 	case "update":
