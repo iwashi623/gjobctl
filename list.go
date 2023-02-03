@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/glue"
 )
 
@@ -18,11 +17,9 @@ func (app *App) List(ctx context.Context, opt *ListOption) error {
 	defer cancel()
 
 	// AWSのセッションを作成
-	sess, err := session.NewSession(&aws.Config{
-		Region: &app.config.Region},
-	)
+	sess, err := app.createAWSSession()
 	if err != nil {
-		return fmt.Errorf("failed to create session: %w", err)
+		return err
 	}
 	sv := glue.New(sess)
 

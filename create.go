@@ -46,6 +46,8 @@ func (app *App) Create(ctx context.Context, opt *CreateOption) error {
 	if err != nil {
 		return err
 	}
+
+	// Glueクライアントを作成
 	sv := glue.New(sess)
 
 	// Glue Jobを更新

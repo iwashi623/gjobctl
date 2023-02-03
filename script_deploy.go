@@ -3,6 +3,7 @@ package gjobctl
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"os"
 	"regexp"
 
@@ -69,6 +70,6 @@ func (app *App) ScriptDeploy(opt *ScriptDeployOption) error {
 		return fmt.Errorf("failed to upload file to S3: %w", err)
 	}
 
-	fmt.Println("File successfully uploaded to S3")
+	log.Println("File successfully uploaded to S3")
 	return nil
 }
