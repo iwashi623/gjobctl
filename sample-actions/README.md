@@ -1,4 +1,4 @@
-#sample-actions
+# sample-actions
 これは`gjobctl`を使った、Github Actionsの参考実装です。
 
 Glue Jobの定義ファイルやスクリプトファイルを一つのリポジトリで管理するときに有効だと思います。

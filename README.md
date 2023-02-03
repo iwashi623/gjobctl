@@ -112,7 +112,8 @@ Glue Jobを実行するコマンドです。実行時のオプション引数は
 ```bash
 $ gjobctl run <job-name>
 ```
-
+## GitHub Actions参考実装
+[こちら](https://github.com/iwashi623/gjobctl/tree/main/sample-actions)
 
 ## Next..
  - [ ] テストの実装
