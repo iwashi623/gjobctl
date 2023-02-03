@@ -9,12 +9,16 @@ import (
 	"github.com/aws/aws-sdk-go/service/glue"
 )
 
+const (
+	TimeoutForGet = 5 * time.Second
+)
+
 type GetOption struct {
 	JobName *string `arg:"" name:"jobname" help:"enter the name of the Glue Job to be getted"`
 }
 
 func (app *App) Get(ctx context.Context, opt *GetOption) error {
-	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	ctx, cancel := context.WithTimeout(ctx, TimeoutForGet)
 	defer cancel()
 
 	// AWSのセッションを作成

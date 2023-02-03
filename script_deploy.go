@@ -13,13 +13,17 @@ import (
 	"github.com/aws/aws-sdk-go/service/s3"
 )
 
+const (
+	TimeoutForScriptDeploy = 5 * time.Second
+)
+
 type ScriptDeployOption struct {
 	JobSettingFile  *string `name:"job-setting-file" short:"f" description:"job setting file in json"`
 	ScriptLocalPath *string `arg:"" name:"script-local-path" short:"s" description:"script local path"`
 }
 
 func (app *App) ScriptDeploy(ctx context.Context, opt *ScriptDeployOption) error {
-	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	ctx, cancel := context.WithTimeout(ctx, TimeoutForScriptDeploy)
 	defer cancel()
 
 	// JSONファイルからGlue Jobの設定を読み込む

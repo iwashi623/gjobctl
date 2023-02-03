@@ -32,8 +32,7 @@ func (app *App) setup() error {
 
 	// Config構造体にデシリアライズ
 	var conf AppConfig
-	decoder := yaml.NewDecoder(f)
-	if err := decoder.Decode(&conf); err != nil {
+	if err := yaml.NewDecoder(f).Decode(&conf); err != nil {
 		return fmt.Errorf("failed to decode config file: %w", err)
 	}
 
