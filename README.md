@@ -116,5 +116,4 @@ $ gjobctl run <job-name>
 
 ## Next..
  - [ ] テストの実装
- - [ ] Timeoutの設定
-
+ - [ ] Runコマンドで実行時のオプション引受け
