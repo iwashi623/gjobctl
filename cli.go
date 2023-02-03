@@ -24,7 +24,7 @@ func cli(ctx context.Context, sub string, opts *CLIOptions, usage func()) error 
 	case "update":
 		return app.Update(opts.Update)
 	case "script-deploy":
-		return app.ScriptDeploy(opts.ScriptDeploy)
+		return app.ScriptDeploy(ctx, opts.ScriptDeploy)
 	case "run":
 		return app.Run(ctx, opts.Run)
 	default:
