@@ -2,7 +2,7 @@
 
 [AWS Glue](https://aws.amazon.com/jp/glue/)をコンソール上からポチポチ変更していると、コミット履歴や設定変更の履歴が残らず、辛いと思うことが多々あったので作りました。
 
-Glue Job にのみ関心を持つツールで、Glue のスクリプトや設定ファイルを一つのリポジトリでまとめて管理したいときに欲しいと思われるAPIをコマンドライン上で実行できます。
+Glue Job にのみ関心を持つツールで、Glue のスクリプトファイルや設定ファイルを一つのリポジトリでまとめて管理したいときに欲しいと思われるAPIをコマンドライン上で実行できます。
 
 ## Use gjobctl
 
@@ -24,7 +24,7 @@ job_name: sample-job
 job_setting_file: sample-job.json
 ```
 
-json の Glue Job 定義ファイルは下記する`gjobctl get`コマンドを使うと簡単に手に入ります。
+json の Glue Job 定義ファイルは下記する`gjobctl get`コマンドを使うと簡単に作成できます。
 
 ### List
 Glue Job の一覧を取得するコマンドです。
@@ -45,7 +45,7 @@ $ gjobctl get <job-name>
 ```
 
 ### Create
-Jsonファイルをもとに、新規GlueJobを作成するコマンドです。
+Jsonファイルをもとに、新規Glue Jobを作成するコマンドです。
 ```bash
 $ gjobctl create
 Successfully createsd Glue Job: sample-job
