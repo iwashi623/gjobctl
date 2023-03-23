@@ -24,7 +24,7 @@ job_name: sample-job
 job_setting_file: sample-job.json
 ```
 
-json の Glue Job 定義ファイルは下記する`gjobctl get`コマンドを使うと簡単に作成できます。
+json形式のGlue Job定義ファイルは、下記する`gjobctl get`コマンドを使うと簡単に作成できます。
 
 ### List
 Glue Job の一覧を取得するコマンドです。
@@ -89,7 +89,7 @@ Successfully updatesd Glue Job: sample-job
 
 option
 ```
-json形式のJobの設定ファイルは"-f"オプションで任意の値を渡せます。
+json形式のJobの設定ファイルの場所は、"-f"オプションで任意の値を渡せます。
 -f, --job-setting-file=JOB-SETTING-FILE
 ```
 
